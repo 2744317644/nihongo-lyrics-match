@@ -53,7 +53,7 @@ test('builds a report listing abnormal songs first with grouped lines', async ()
     assert.equal(report.schemaVersion, 1);
     assert.equal(report.summary.filesScanned, 3);
     assert.equal(report.files.length, 3);
-    assert.equal(report.filesWithIssues, 2);
+    assert.equal(report.filesWithIssues, 1);
     assert.equal(report.backupRoot, path.join(dir, '.lyrics-backup'));
     assert.ok(report.linesTotal > 0);
     assert.ok(report.flaggedLines > 0);
@@ -61,7 +61,7 @@ test('builds a report listing abnormal songs first with grouped lines', async ()
     assert.equal(report.conversion.converted, 1, 'only the clean file is converted and unchanged');
     assert.equal(report.conversion.pending, 1, 'nobackup.lrc still needs conversion');
     assert.equal(report.conversion.manualEdits, 1);
-    assert.equal(report.conversion.needsReview, 2);
+    assert.equal(report.conversion.needsReview, 1);
 
     const clean = report.files.find((file) => file.name === 'clean.lrc');
     const problem = report.files.find((file) => file.name === 'problem.lrc');
@@ -71,7 +71,7 @@ test('builds a report listing abnormal songs first with grouped lines', async ()
     assert.ok(problem.abnormal);
     assert.ok(problem.flaggedLines > 0);
     assert.ok(problem.lines.some((line) => line.flagged));
-    assert.equal(noBackup.abnormal, true);
+    assert.equal(noBackup.abnormal, false, 'a file with no content flags and no backup is not a review issue');
     assert.ok(noBackup.flags.includes('noBackup'));
     assert.equal(noBackup.hasBackup, false);
 
@@ -98,12 +98,13 @@ test('renders one self-contained interactive HTML document', async () => {
     assert.match(html, /id="tab-all"/u);
     assert.match(html, /已转换/u);
     assert.match(html, /无需转换/u);
-    assert.match(html, /需要复核/u);
+    assert.match(html, /其中需要复核/u);
+    assert.match(html, /id="count-note"/u);
     assert.match(html, /id="song-list"/u);
     assert.match(html, /id="detail"/u);
     assert.match(html, /搜索歌曲/u);
     assert.equal(data.files.length, 3);
-    assert.equal(data.filesWithIssues, 2);
+    assert.equal(data.filesWithIssues, 1);
     assert.equal(data.linesTotal, report.linesTotal);
     assert.equal(data.conversion.converted, 1);
     assert.doesNotMatch(html, /(?:src|href)\s*=\s*["']https?:/iu, 'no network assets');
@@ -189,8 +190,8 @@ test('writes the report to a chosen path and the default library path', async ()
     assert.ok(fs.existsSync(custom.path));
     assert.ok(fs.statSync(custom.path).size > 10_000);
     assert.equal(custom.filesScanned, 3);
-    assert.equal(custom.filesWithIssues, 2);
-    assert.equal(custom.issueFiles.length, 2);
+    assert.equal(custom.filesWithIssues, 1);
+    assert.equal(custom.issueFiles.length, 1);
     assert.ok(custom.flaggedLines > 0);
 
     const fallback = writeReviewReport({ directory: dir });
@@ -261,7 +262,7 @@ test('Host tool lyrics_report validates its schema and returns a written report'
     assert.ok(fs.existsSync(value.path));
     const text = tool.output.render({}, value)[0].text;
     assert.match(text, /lyrics HTML review report/u);
-    assert.match(text, /songs with issues 2/u);
+    assert.match(text, /songs with issues 1/u);
     assert.match(text, /self-contained and read-only/u);
   });
 });
