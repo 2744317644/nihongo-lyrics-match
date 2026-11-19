@@ -1,0 +1,8 @@
+node_modules/
+.lyrics-backup/
+reports/
+release/
+.tmp*
+*.log
+*.bak
+.DS_Store
