@@ -168,6 +168,30 @@ test('conversion is idempotent and skips lyrics without a Chinese marker unless 
   });
 });
 
+test('empty lyrics tags are no-lyrics, not already-ok', async () => {
+  await withTempDir(async (dir) => {
+    const file = writeFixture(dir, 'empty.flac', buildFlac({ usltText: '', lyricsKey: 'LYRICS' }));
+    const before = sha256File(file);
+
+    const preview = convertDirectory({ directory: dir });
+    assert.equal(preview.files[0].status, 'no-lyrics');
+    assert.equal(preview.summary.noLyrics, 1);
+    assert.equal(preview.summary.alreadyOk, 0);
+    assert.equal(preview.summary.changed, 0);
+
+    const applied = convertDirectory({ directory: dir, apply: true });
+    assert.equal(applied.summary.noLyrics, 1);
+    assert.equal(applied.summary.backupsCreated, 0);
+    assert.equal(fs.existsSync(path.join(dir, BACKUP_DIR)), false, 'no backup for a file with no lyrics');
+    assert.equal(sha256File(file), before, 'an empty lyrics file is not rewritten');
+
+    const review = reviewDirectory({ directory: dir, filter: 'all' });
+    assert.equal(review.summary.noLyrics, 1);
+    assert.equal(review.files[0].status, 'no-lyrics');
+    assert.ok(review.files[0].flags.includes('noLyrics'));
+  });
+});
+
 test('review handles no-lyrics containers and does not write', async () => {
   await withTempDir(async (dir) => {
     const wav = writeFixture(dir, 'plain.wav', buildWavWithoutId3());
