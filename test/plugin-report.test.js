@@ -201,6 +201,25 @@ test('writes the report to a chosen path and the default library path', async ()
   });
 });
 
+test('an unconverted file with lyrics keeps a raw timed-line preview', async () => {
+  await withTempDir(async (dir) => {
+    writeFixture(dir, 'japanese.lrc', Buffer.from('[00:01.00]ああ\n[00:02.00]世界\n', 'utf8'));
+    writeFixture(dir, 'empty.lrc', Buffer.from('', 'utf8'));
+    const report = buildReviewReport({ directory: dir });
+    const japanese = report.files.find((file) => file.name === 'japanese.lrc');
+    const empty = report.files.find((file) => file.name === 'empty.lrc');
+    assert.ok(japanese);
+    assert.equal(japanese.pairs, 0);
+    assert.equal(japanese.conversionStatus, 'no-change');
+    assert.ok(japanese.lines.length > 0, 'the reader can still inspect the lyrics');
+    assert.equal(japanese.lines[0].reason, 'unsplit');
+    assert.equal(japanese.abnormal, false);
+    assert.ok(empty);
+    assert.equal(empty.status, 'no-lyrics');
+    assert.equal(empty.lines.length, 0);
+  });
+});
+
 test('conversion data feeds the report and lyrics_convert writes it automatically', async () => {
   await withTempDir(async (dir) => {
     writeFixture(dir, 'a.lrc', Buffer.from(CLEAN, 'utf8'));
