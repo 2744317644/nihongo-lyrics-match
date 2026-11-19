@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="220" height="40" viewBox="0 0 220 40" role="img" aria-label="DSH plugin — DeepSeek Harness">
+  <rect width="220" height="40" rx="8" fill="#4f6bed"/>
+  <rect x="0.5" y="0.5" width="219" height="39" rx="7.5" fill="none" stroke="#ffffff" stroke-opacity="0.18"/>
+  <text x="16" y="26" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="700" letter-spacing="0.8" fill="#ffffff">DSH</text>
+  <text x="60" y="26" font-family="Segoe UI, Arial, sans-serif" font-size="13" fill="#eaf0ff">DeepSeek Harness plugin</text>
+</svg>

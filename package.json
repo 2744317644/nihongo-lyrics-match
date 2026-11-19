@@ -1,0 +1,69 @@
+{
+  "name": "dsh-nihongo-lyrics-match",
+  "version": "1.3.0",
+  "description": "Japanese/Chinese lyric splitter with centralized LRC backups, a DSH plugin, and an interactive HTML review report. CLI included.",
+  "type": "module",
+  "license": "MIT",
+  "author": "2744317644",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/2744317644/nihongo-lyrics-match.git"
+  },
+  "homepage": "https://github.com/2744317644/nihongo-lyrics-match",
+  "keywords": [
+    "dsh",
+    "deepseek-harness",
+    "dsh-plugin",
+    "lyrics",
+    "japanese",
+    "lrc",
+    "flac",
+    "lyrics-splitter"
+  ],
+  "bin": {
+    "lyrics-split": "./bin/lyrics-split.js",
+    "lyrics-migrate-backups": "./bin/migrate-backups.js"
+  },
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg"
+  },
+  "files": [
+    "index.js",
+    "client.js",
+    "cordis.patch.yml",
+    "lib",
+    "bin",
+    "src",
+    "locale/*.json",
+    "docs",
+    "icon.svg",
+    "assets",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": [
+        "@deepseek-ai/dsh-client-locale",
+        "@deepseek-ai/dsh-client-ui-renderer",
+        "@deepseek-ai/dsh-client-ui-settings",
+        "@deepseek-ai/dsh-client-ui-settings-general",
+        "@deepseek-ai/dsh-client-ui-workspace"
+      ]
+    }
+  }
+}

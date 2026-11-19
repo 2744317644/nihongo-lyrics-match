@@ -1,0 +1,7 @@
+{
+  "meta": {
+    "title": "Nihongo Lyrics Match",
+    "description": "Split merged Japanese/Chinese lyric lines in WAV, MP3, FLAC, and LRC files, then review every split against the original lyrics saved in one .lyrics-backup tree that mirrors the music folders. Adds lyrics_convert, lyrics_review, lyrics_revert, and lyrics_report: an apply generates a self-contained interactive HTML report automatically, starting with converted / no-change / needs-review counts and opening each song's flagged lines on click. The same package also ships the lyrics-splitter CLI. Audio files are never duplicated; only their lyric text is backed up.",
+    "detail": "docs/DETAIL.md"
+  }
+}

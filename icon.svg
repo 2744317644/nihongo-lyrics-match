@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36" role="img" aria-label="Nihongo Lyrics Match — DSH plugin">
+  <rect x="4" y="6" width="28" height="5" rx="2.5" fill="#6f8aa8"/>
+  <rect x="4" y="13" width="13" height="5" rx="2.5" fill="#2f7f73"/>
+  <rect x="19" y="13" width="10" height="5" rx="2.5" fill="#95b7cf"/>
+  <rect x="4" y="22" width="28" height="9" rx="4.5" fill="#4f6bed"/>
+  <text x="18" y="28.8" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="6" font-weight="700" letter-spacing="0.4" fill="#ffffff">DSH</text>
+</svg>

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="300" viewBox="0 0 640 300" role="img" aria-label="One merged Japanese and Chinese lyric line is split into two lines that share the same timestamp, then checked in review">
+  <g fill="none" stroke="#8a98a8" stroke-width="2" opacity="0.75">
+    <rect x="48" y="139" width="40" height="22" rx="6"/>
+    <rect x="326" y="120" width="40" height="22" rx="6"/>
+    <rect x="326" y="158" width="40" height="22" rx="6"/>
+  </g>
+  <rect x="96" y="139" width="90" height="22" rx="6" fill="#5b7e9e"/>
+  <rect x="190" y="139" width="58" height="22" rx="6" fill="#2e7d6e"/>
+  <g fill="none" stroke="#8a98a8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.85">
+    <path d="M264 150h44"/>
+    <path d="M300 142l9 8-9 8"/>
+  </g>
+  <rect x="374" y="120" width="118" height="22" rx="6" fill="#5b7e9e"/>
+  <rect x="374" y="158" width="118" height="22" rx="6" fill="#2e7d6e"/>
+  <g stroke="#8a98a8" stroke-width="2" stroke-linecap="round" stroke-dasharray="2 5" opacity="0.8">
+    <path d="M346 142v16"/>
+  </g>
+  <g fill="none" stroke="#3e9a6e" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M504 170l6 6 12-12"/>
+  </g>
+</svg>
