@@ -93,10 +93,11 @@ test('renders one self-contained interactive HTML document', async () => {
 
     assert.match(html, /^<!doctype html>/iu);
     assert.match(html, /id="tab-converted"/u);
-    assert.match(html, /id="tab-nochange"/u);
+    assert.match(html, /id="tab-unconverted"/u);
     assert.match(html, /id="tab-issues"/u);
     assert.match(html, /id="tab-all"/u);
     assert.match(html, /已转换/u);
+    assert.match(html, /未转换/u);
     assert.match(html, /无需转换/u);
     assert.match(html, /其中需要复核/u);
     assert.match(html, /id="count-note"/u);
