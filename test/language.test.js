@@ -60,6 +60,15 @@ test('strips a slash delimiter between Japanese and Chinese, cautiously', () => 
   assert.equal(internal.zh, '测试');
 });
 
+test('keeps a parenthetical translation repeat on the Chinese half', () => {
+  const result = splitLyricLine('ずっとそばで(ずっとそばで) 一直在身旁 （一直在身旁）');
+  assert.deepEqual(result, {
+    jp: 'ずっとそばで(ずっとそばで)',
+    zh: '一直在身旁 （一直在身旁）',
+    reason: 'standard',
+  });
+});
+
 test('never splits credit lines', () => {
   assert.equal(splitLyricLine('作词 : Shihori'), null);
   assert.equal(splitLyricLine('Drums : 玉田豊夢'), null);

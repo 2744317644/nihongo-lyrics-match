@@ -191,11 +191,15 @@ function splitLyricLineInner(text) {
   // space, only consider thin-space boundaries.
   // A bracketed translation is a whole unit: prefer the boundary before the
   // opening bracket even when the translation itself contains a thin space.
-  const bracketCandidates = collected.filter((c) => CN_START_PUNCT_RE.test(c.suf[0]));
+  // Do not let a later bracket inside the translation override an earlier
+  // Chinese-start candidate (the normal JP/ZH boundary).
   const thinCandidates = collected.filter((c) => c.sep === '\u2009');
-  const candidates = bracketCandidates.length > 0
-    ? bracketCandidates
-    : thinCandidates.length > 0 ? thinCandidates : collected;
+  let candidates = collected;
+  if (thinCandidates.length > 0) {
+    const firstThin = thinCandidates[0];
+    const bracketsBeforeThin = collected.filter((c) => c.strict && CN_START_PUNCT_RE.test(c.suf[0]) && c.i < firstThin.i);
+    candidates = bracketsBeforeThin.length > 0 ? bracketsBeforeThin : thinCandidates;
+  }
 
   const strict = candidates.filter((c) => c.strict);
 

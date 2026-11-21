@@ -53,6 +53,17 @@ test('analyzeLyricsText returns the per-line split decision', () => {
   );
 });
 
+test('analyzeLyricsText keeps a parenthetical translation repeat on the Chinese half', () => {
+  const analysis = analyzeLyricsText('[01:51.77]ずっとそばで(ずっとそばで) 一直在身旁 （一直在身旁）');
+  assert.equal(analysis.changed, 1);
+  assert.equal(analysis.decisions[0].jp, 'ずっとそばで(ずっとそばで)');
+  assert.equal(analysis.decisions[0].zh, '一直在身旁 （一直在身旁）');
+  assert.equal(
+    analysis.text,
+    '[01:51.77]ずっとそばで(ずっとそばで)\n[01:51.77]一直在身旁 （一直在身旁）',
+  );
+});
+
 test('analyzeLyricsText strips a slash-delimited Chinese translation', () => {
   const analysis = analyzeLyricsText('[00:16.00]楽しみだけれど ちょっと怖いけれど /一份期待夹杂着些许恐惧');
   assert.equal(analysis.changed, 1);

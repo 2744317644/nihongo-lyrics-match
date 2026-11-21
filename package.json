@@ -1,6 +1,6 @@
 {
   "name": "dsh-nihongo-lyrics-match",
-  "version": "1.3.9",
+  "version": "1.3.10",
   "description": "Japanese/Chinese lyric splitter with centralized LRC backups, a DSH plugin, and an interactive HTML review report. CLI included.",
   "type": "module",
   "license": "MIT",
