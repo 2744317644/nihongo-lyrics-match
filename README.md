@@ -8,7 +8,7 @@
 
 同一个仓库同时提供：
 
-- **DSH 插件**（`dsh-nihongo-lyrics-match`）：`lyrics_convert` / `lyrics_review` / `lyrics_report` / `lyrics_revert` 四个工具，外加可选的设置面板；
+- **DSH 插件**（`dsh-nihongo-lyrics-match`）：`lyrics_convert` / `lyrics_review` / `lyrics_report` / `lyrics_revert` 四个工具；**不提供设置页**，交互通过工具和 HTML 报告完成。
 - **CLI**（`lyrics-split`）：不依赖 DSH，直接对目录批量运行。
 
 ```text
@@ -61,7 +61,7 @@ plugin_manager install_bundle({
 })
 ```
 
-安装后打开新会话即可看到 `lyrics_convert`、`lyrics_review`、`lyrics_report`、`lyrics_revert` 四个工具；设置里的「歌词匹配」面板是可选的。
+安装后打开新会话即可看到 `lyrics_convert`、`lyrics_review`、`lyrics_report`、`lyrics_revert` 四个工具；插件没有设置页，转换后打开的 HTML 报告就是复核入口。
 
 ## 使用
 
@@ -148,7 +148,6 @@ node --test
 
 ```text
 index.js            DSH Host 插件入口
-client.js           DSH 可选设置面板
 cordis.patch.yml    DSH bundle 行
 lib/                DSH 插件的拆分/复核/报告/还原引擎
 bin/                CLI 入口（lyrics-split、migrate-backups）

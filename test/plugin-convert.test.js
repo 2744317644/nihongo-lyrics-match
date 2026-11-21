@@ -299,14 +299,11 @@ test('Host tool definitions satisfy the enforced schema subset and return valid 
   });
 });
 
-test('the Host plugin registers exactly the four tools and the panel routes', async () => {
+test('the Host plugin registers exactly the four tools without a settings panel', async () => {
   const plugin = await import('../index.js');
-  const { REVIEW_ROUTE, REVERT_ROUTE } = await import('../lib/web-api.js');
   assert.equal(plugin.name, 'nihongo-lyrics-match');
   assert.deepEqual(plugin.inject, ['tools']);
   const registered = [];
-  const routes = [];
-  const injectCalls = [];
   plugin.apply({
     tools: {
       register(definition) {
@@ -314,32 +311,12 @@ test('the Host plugin registers exactly the four tools and the panel routes', as
         return () => {};
       },
     },
-    inject(services, callback) {
-      injectCalls.push(services);
-      callback({
-        webServer: {
-          register(route) {
-            routes.push(route);
-            return () => {};
-          },
-        },
-        effect(callback) {
-          return callback();
-        },
-      });
-      return () => {};
-    },
   });
   assert.deepEqual(registered.map((definition) => definition.name), [
     'lyrics_convert',
     'lyrics_review',
     'lyrics_revert',
     'lyrics_report',
-  ]);
-  assert.deepEqual(injectCalls, [['webServer']]);
-  assert.deepEqual(routes.map((route) => [route.kind, route.path]), [
-    ['exact', REVIEW_ROUTE],
-    ['exact', REVERT_ROUTE],
   ]);
 });
 

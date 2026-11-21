@@ -14,36 +14,27 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const MANIFEST = JSON.parse(fs.readFileSync(path.join(ROOT, 'package.json'), 'utf8'));
 const LOCALES = ['en', 'zh'];
 
-test('manifest declares the Host plugin, the Client half, and the display resources', () => {
+test('manifest declares the Host plugin and the display resources', () => {
   assert.equal(MANIFEST.name, 'dsh-nihongo-lyrics-match');
   assert.equal(MANIFEST.type, 'module');
   assert.equal(MANIFEST.exports['.'], './index.js');
-  assert.equal(MANIFEST.exports['./client'], './client.js');
   assert.equal(MANIFEST.exports['./icon'], './icon.svg');
   assert.equal(MANIFEST.exports['./locale/*.json'], './locale/*.json');
   assert.equal(MANIFEST.dsh.bundle.patch, './cordis.patch.yml');
-  assert.equal(MANIFEST.dsh.client.platform, 'web');
-  assert.equal(MANIFEST.dsh.client.immediately, true);
-  for (const dependency of [
-    '@deepseek-ai/dsh-client-locale',
-    '@deepseek-ai/dsh-client-ui-renderer',
-    '@deepseek-ai/dsh-client-ui-settings',
-    '@deepseek-ai/dsh-client-ui-settings-general',
-    '@deepseek-ai/dsh-client-ui-workspace',
-  ]) {
-    assert.ok(MANIFEST.dsh.client.inject.includes(dependency), `client inject lists ${dependency}`);
-  }
+  assert.equal(MANIFEST.dsh.client, undefined, 'the settings panel was removed');
+  assert.equal(MANIFEST.exports['./client'], undefined);
 
   const files = MANIFEST.files;
-  for (const entry of ['index.js', 'client.js', 'cordis.patch.yml', 'lib', 'locale/*.json', 'docs', 'icon.svg']) {
+  for (const entry of ['index.js', 'cordis.patch.yml', 'lib', 'locale/*.json', 'docs', 'icon.svg']) {
     assert.ok(files.includes(entry), `files lists ${entry}`);
   }
+  assert.equal(files.includes('client.js'), false);
   for (const entry of files) {
     if (entry.includes('*')) continue;
     assert.ok(fs.existsSync(path.join(ROOT, entry)), `packaged file exists: ${entry}`);
   }
-  assert.ok(fs.existsSync(path.join(ROOT, 'lib', 'web-api.js')));
-  assert.ok(fs.existsSync(path.join(ROOT, 'client.js')));
+  assert.equal(fs.existsSync(path.join(ROOT, 'lib', 'web-api.js')), false);
+  assert.equal(fs.existsSync(path.join(ROOT, 'client.js')), false);
 });
 
 test('locale metadata is valid JSON with a title, description, and existing detail document', () => {
@@ -61,6 +52,7 @@ test('locale metadata is valid JSON with a title, description, and existing deta
     assert.match(document, /^!\[[^\]]+\]\(preview\.svg\)$/mu, `${language} detail has the feature image`);
     assert.doesNotMatch(document, /does not add a Web UI panel/u, 'stale no-UI statement removed');
     assert.doesNotMatch(document, /不添加 Web 界面面板/u, 'stale no-UI statement removed');
+    assert.doesNotMatch(document, /Settings > Lyrics match|设置 > 歌词匹配/u, 'settings panel instructions removed');
   }
 });
 
