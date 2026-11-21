@@ -53,6 +53,17 @@ test('analyzeLyricsText returns the per-line split decision', () => {
   );
 });
 
+test('analyzeLyricsText does not jump past a thin-space boundary into a Chinese translation', () => {
+  const analysis = analyzeLyricsText('[01:50.34]“ありがとう”今はもう 元気は100％で\u2009以现在已经元气100%的状态 「谢谢你！」');
+  assert.equal(analysis.changed, 1);
+  assert.equal(analysis.decisions[0].jp, '“ありがとう”今はもう 元気は100％で');
+  assert.equal(analysis.decisions[0].zh, '以现在已经元气100%的状态 「谢谢你！」');
+  assert.equal(
+    analysis.text,
+    '[01:50.34]“ありがとう”今はもう 元気は100％で\n[01:50.34]以现在已经元气100%的状态 「谢谢你！」',
+  );
+});
+
 test('analyzeLyricsText keeps a thin space between Japanese words before a bracket', () => {
   const analysis = analyzeLyricsText('[01:58.02]とこから聞こえた\u2009声 〖不知道從哪傳來的聲音〗');
   assert.equal(analysis.changed, 1);

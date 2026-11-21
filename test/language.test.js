@@ -89,6 +89,15 @@ test('keeps a thin space between Japanese words before a bracket translation', (
   });
 });
 
+test('does not jump past a thin-space boundary into a Chinese translation', () => {
+  const result = splitLyricLine('“ありがとう”今はもう 元気は100％で\u2009以现在已经元气100%的状态 「谢谢你！」');
+  assert.deepEqual(result, {
+    jp: '“ありがとう”今はもう 元気は100％で',
+    zh: '以现在已经元气100%的状态 「谢谢你！」',
+    reason: 'standard',
+  });
+});
+
 test('never splits credit lines', () => {
   assert.equal(splitLyricLine('作词 : Shihori'), null);
   assert.equal(splitLyricLine('Drums : 玉田豊夢'), null);
