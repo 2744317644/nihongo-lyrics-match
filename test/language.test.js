@@ -80,6 +80,15 @@ test('keeps a closing quote with the Japanese half before a bracket translation'
   });
 });
 
+test('keeps a thin space between Japanese words before a bracket translation', () => {
+  const result = splitLyricLine('とこから聞こえた\u2009声 〖不知道從哪傳來的聲音〗');
+  assert.deepEqual(result, {
+    jp: 'とこから聞こえた\u2009声',
+    zh: '〖不知道從哪傳來的聲音〗',
+    reason: 'standard',
+  });
+});
+
 test('never splits credit lines', () => {
   assert.equal(splitLyricLine('作词 : Shihori'), null);
   assert.equal(splitLyricLine('Drums : 玉田豊夢'), null);

@@ -53,6 +53,14 @@ test('analyzeLyricsText returns the per-line split decision', () => {
   );
 });
 
+test('analyzeLyricsText keeps a thin space between Japanese words before a bracket', () => {
+  const analysis = analyzeLyricsText('[01:58.02]とこから聞こえた\u2009声 〖不知道從哪傳來的聲音〗');
+  assert.equal(analysis.changed, 1);
+  assert.equal(analysis.decisions[0].jp, 'とこから聞こえた\u2009声');
+  assert.equal(analysis.decisions[0].zh, '〖不知道從哪傳來的聲音〗');
+  assert.equal(analysis.text, '[01:58.02]とこから聞こえた\u2009声\n[01:58.02]〖不知道從哪傳來的聲音〗');
+});
+
 test('analyzeLyricsText keeps a closing quote with the Japanese half', () => {
   const analysis = analyzeLyricsText(
     '[00:49.04]ほらまた聞こえてきた“やっと出会えたね\u2009” 〖接著又聽見「終於遇見你們了」〗',
