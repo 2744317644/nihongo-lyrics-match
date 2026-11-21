@@ -85,6 +85,16 @@ function isSentenceEnd(char) {
   return SENTENCE_END_RE.test(char);
 }
 
+function hasUnclosedQuote(pre, close) {
+  const open = close === '”' ? '“' : '‘';
+  let depth = 0;
+  for (const ch of pre) {
+    if (ch === open) depth++;
+    else if (ch === close) depth--;
+  }
+  return depth > 0;
+}
+
 // Lines that begin with a Latin phrase sometimes repeat that phrase at the
 // start of the translation:
 //   Calling Happy ⽣まれたてのBrand New Day Calling Happy 崭新的 Brand New Day
@@ -154,6 +164,9 @@ function collectCandidates(text) {
     // Japanese half must contain kana; translation half must not.
     if (!KANA_RE.test(pre) || KANA_RE.test(suf)) continue;
     if (!HAN_RE.test(suf)) continue; // without CJK this is almost certainly not a translation
+    // A space immediately before the closing quote of a Japanese quotation is
+    // inside the quotation, not the JP/translation boundary.
+    if ((suf[0] === '”' || suf[0] === '’') && hasUnclosedQuote(pre, suf[0])) continue;
     out.push({
       i,
       pre,

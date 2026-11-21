@@ -69,6 +69,17 @@ test('keeps a parenthetical translation repeat on the Chinese half', () => {
   });
 });
 
+test('keeps a closing quote with the Japanese half before a bracket translation', () => {
+  const result = splitLyricLine(
+    'ほらまた聞こえてきた“やっと出会えたね\u2009” 〖接著又聽見「終於遇見你們了」〗',
+  );
+  assert.deepEqual(result, {
+    jp: 'ほらまた聞こえてきた“やっと出会えたね\u2009”',
+    zh: '〖接著又聽見「終於遇見你們了」〗',
+    reason: 'standard',
+  });
+});
+
 test('never splits credit lines', () => {
   assert.equal(splitLyricLine('作词 : Shihori'), null);
   assert.equal(splitLyricLine('Drums : 玉田豊夢'), null);

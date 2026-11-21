@@ -53,6 +53,19 @@ test('analyzeLyricsText returns the per-line split decision', () => {
   );
 });
 
+test('analyzeLyricsText keeps a closing quote with the Japanese half', () => {
+  const analysis = analyzeLyricsText(
+    '[00:49.04]ほらまた聞こえてきた“やっと出会えたね\u2009” 〖接著又聽見「終於遇見你們了」〗',
+  );
+  assert.equal(analysis.changed, 1);
+  assert.equal(analysis.decisions[0].jp, 'ほらまた聞こえてきた“やっと出会えたね\u2009”');
+  assert.equal(analysis.decisions[0].zh, '〖接著又聽見「終於遇見你們了」〗');
+  assert.equal(
+    analysis.text,
+    '[00:49.04]ほらまた聞こえてきた“やっと出会えたね\u2009”\n[00:49.04]〖接著又聽見「終於遇見你們了」〗',
+  );
+});
+
 test('analyzeLyricsText keeps a parenthetical translation repeat on the Chinese half', () => {
   const analysis = analyzeLyricsText('[01:51.77]ずっとそばで(ずっとそばで) 一直在身旁 （一直在身旁）');
   assert.equal(analysis.changed, 1);
