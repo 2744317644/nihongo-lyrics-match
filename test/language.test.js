@@ -33,6 +33,15 @@ test('splits before a lenticular-bracket translation that contains spaces', () =
   });
 });
 
+test('splits before a bracket even when the translation contains a thin space', () => {
+  const result = splitLyricLine('ようやくわかりました 〖\u2009我終於明白了〗');
+  assert.deepEqual(result, {
+    jp: 'ようやくわかりました',
+    zh: '〖\u2009我終於明白了〗',
+    reason: 'standard',
+  });
+});
+
 test('never splits credit lines', () => {
   assert.equal(splitLyricLine('作词 : Shihori'), null);
   assert.equal(splitLyricLine('Drums : 玉田豊夢'), null);
