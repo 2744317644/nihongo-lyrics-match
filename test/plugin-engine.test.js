@@ -65,6 +65,10 @@ test('analyzeLyricsText splits a lenticular-bracket translation before the opene
     analysis.text,
     '[00:01.00]見たでしよ？ イタズラで聞く 赤くなった\n[00:01.00]〖看到了吗？ 恶作剧地问著 你却红了脸〗',
   );
+
+  const thin = analyzeLyricsText('[00:02.00]ようやくわかりました 〖\u2009我終於明白了〗');
+  assert.equal(thin.decisions[0].jp, 'ようやくわかりました');
+  assert.equal(thin.decisions[0].zh, '〖\u2009我終於明白了〗');
 });
 
 test('analyzeLyricsText classifies already-paired, title, meta and kept lines', () => {
