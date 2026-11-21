@@ -25,7 +25,7 @@ export const JP_ONLY = new Set([
 ]);
 
 // Full-width punctuation that can start a Chinese translation clause.
-const CN_START_PUNCT_RE = /^[（「『【《〈〔]/;
+const CN_START_PUNCT_RE = /^[（「『【《〈〔〖]/;
 // Some translations are wrapped in curly/straight quotes: `“理想的我”就在前方等待`.
 // Only treat a quote as a Chinese opener when the next character is Han.
 const QUOTE_START_RE = /^[“”‘’"']/;
