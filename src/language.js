@@ -33,8 +33,29 @@ const QUOTE_START_RE = /^[“”‘’"']/;
 function isChineseOpening(suf) {
   if (HAN_RE.test(suf[0])) return true;
   if (CN_START_PUNCT_RE.test(suf[0])) return true;
+  if (suf[0] === '/' || suf[0] === '／') {
+    const rest = suf.slice(1).trimStart();
+    if (rest && HAN_RE.test(rest[0])) return true;
+  }
   if (QUOTE_START_RE.test(suf[0]) && suf.length > 1 && HAN_RE.test(suf[1])) return true;
   return false;
+}
+
+/**
+ * Strip the slash that some sources put between a Japanese line and its
+ * Chinese translation, e.g. `…けれど /一份期待…` -> `…けれど` + `一份期待…`.
+ * Conservative: only a leading `/` or `／`, only when the rest contains Han
+ * but no kana, and only when the rest contains no further slash. Anything
+ * else (A/B, URLs, 好き/嫌い, 他/她) is left untouched.
+ * @param {string} zh
+ * @returns {string | null} cleaned text, or null when the rule does not apply
+ */
+export function stripSlashDelimiter(zh) {
+  if (!/^[\/／]/u.test(zh)) return null;
+  const rest = zh.replace(/^[\/／]\s?/u, '');
+  if (!rest || KANA_RE.test(rest) || !HAN_RE.test(rest)) return null;
+  if (/[\/／]/u.test(rest)) return null;
+  return rest;
 }
 
 // Some taggers separate the Japanese half from the translation with a regular
@@ -151,7 +172,7 @@ function collectCandidates(text) {
  * @returns {{jp: string, zh: string, reason: string} | null} null when the line
  *   is already correct / is not a translated Japanese line / is metadata.
  */
-export function splitLyricLine(text) {
+function splitLyricLineInner(text) {
   if (isMetaLine(text) || looksLikeTitleLine(text)) return null;
 
   if (!KANA_RE.test(text)) {
@@ -275,6 +296,20 @@ export function splitLyricLine(text) {
   }
 
   return { jp: pick.pre, zh: pick.suf, reason };
+}
+
+/**
+ * Split a merged line and remove a slash used purely as the JP/translation
+ * delimiter. Internal slashes (A/B, 他/她) are left untouched.
+ * @param {string} text
+ * @returns {{jp: string, zh: string, reason: string} | null}
+ */
+export function splitLyricLine(text) {
+  const split = splitLyricLineInner(text);
+  if (!split) return null;
+  const cleaned = stripSlashDelimiter(split.zh);
+  if (cleaned !== null) split.zh = cleaned;
+  return split;
 }
 
 function hasJapaneseOnly(text) {

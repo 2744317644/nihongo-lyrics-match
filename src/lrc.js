@@ -1,7 +1,7 @@
 // LRC text handling: parse timed lines, split merged JP+translation lines, and
 // keep every other line (metadata, blank lines, comments) untouched.
 
-import { splitLyricLine, HAN_RE, KANA_RE } from './language.js';
+import { splitLyricLine, stripSlashDelimiter, HAN_RE, KANA_RE } from './language.js';
 
 // One or more leading time tags followed by the text, e.g.
 //   [00:12.34]text
@@ -72,6 +72,9 @@ export function transformLyricsText(text) {
       output.push(current.line);
       continue;
     }
+
+    const slashCleaned = stripSlashDelimiter(split.zh);
+    if (slashCleaned !== null) split.zh = slashCleaned;
 
     output.push(timeTags + split.jp);
     output.push(timeTags + split.zh);

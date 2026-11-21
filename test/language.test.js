@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 
-import { splitLyricLine } from '../src/language.js';
+import { splitLyricLine, stripSlashDelimiter } from '../src/language.js';
 
 test('splits a standard merged line at the translation boundary', () => {
   const result = splitLyricLine(
@@ -40,6 +40,24 @@ test('splits before a bracket even when the translation contains a thin space', 
     zh: '〖\u2009我終於明白了〗',
     reason: 'standard',
   });
+});
+
+test('strips a slash delimiter between Japanese and Chinese, cautiously', () => {
+  const result = splitLyricLine('楽しみだけれど ちょっと怖いけれど /一份期待夹杂着些许恐惧');
+  assert.deepEqual(result, {
+    jp: '楽しみだけれど ちょっと怖いけれど',
+    zh: '一份期待夹杂着些许恐惧',
+    reason: 'standard',
+  });
+  assert.equal(stripSlashDelimiter('/一份期待'), '一份期待');
+  assert.equal(stripSlashDelimiter('/ 一份期待'), '一份期待');
+  assert.equal(stripSlashDelimiter('/他/她'), null, 'internal slashes are content, not a delimiter');
+  assert.equal(stripSlashDelimiter('/A/B'), null, 'ASCII paths are untouched');
+  assert.equal(stripSlashDelimiter('/あ'), null, 'a kana remainder is not a Chinese translation');
+  assert.equal(splitLyricLine('A/B test'), null);
+  const internal = splitLyricLine('好き/嫌い 测试');
+  assert.equal(internal.jp, '好き/嫌い', 'a slash inside Japanese is content, not a delimiter');
+  assert.equal(internal.zh, '测试');
 });
 
 test('never splits credit lines', () => {
