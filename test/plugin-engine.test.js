@@ -53,6 +53,20 @@ test('analyzeLyricsText returns the per-line split decision', () => {
   );
 });
 
+test('analyzeLyricsText splits a lenticular-bracket translation before the opener', () => {
+  const analysis = analyzeLyricsText(
+    '[00:01.00]見たでしよ？ イタズラで聞く 赤くなった 〖看到了吗？ 恶作剧地问著 你却红了脸〗',
+  );
+  assert.equal(analysis.changed, 1);
+  assert.equal(analysis.decisions[0].reason, 'standard');
+  assert.equal(analysis.decisions[0].jp, '見たでしよ？ イタズラで聞く 赤くなった');
+  assert.equal(analysis.decisions[0].zh, '〖看到了吗？ 恶作剧地问著 你却红了脸〗');
+  assert.equal(
+    analysis.text,
+    '[00:01.00]見たでしよ？ イタズラで聞く 赤くなった\n[00:01.00]〖看到了吗？ 恶作剧地问著 你却红了脸〗',
+  );
+});
+
 test('analyzeLyricsText classifies already-paired, title, meta and kept lines', () => {
   const paired = analyzeLyricsText([
     '[00:01.00]春空に残る淋しさ',

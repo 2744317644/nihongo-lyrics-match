@@ -22,6 +22,17 @@ test('keeps the full translation when the translation itself contains spaces', (
   assert.equal(result.zh, '顾虑虽有些放不下 但一定没有大碍');
 });
 
+test('splits before a lenticular-bracket translation that contains spaces', () => {
+  const result = splitLyricLine(
+    '見たでしよ？ イタズラで聞く 赤くなった 〖看到了吗？ 恶作剧地问著 你却红了脸〗',
+  );
+  assert.deepEqual(result, {
+    jp: '見たでしよ？ イタズラで聞く 赤くなった',
+    zh: '〖看到了吗？ 恶作剧地问著 你却红了脸〗',
+    reason: 'standard',
+  });
+});
+
 test('never splits credit lines', () => {
   assert.equal(splitLyricLine('作词 : Shihori'), null);
   assert.equal(splitLyricLine('Drums : 玉田豊夢'), null);
