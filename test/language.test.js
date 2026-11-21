@@ -98,6 +98,17 @@ test('does not jump past a thin-space boundary into a Chinese translation', () =
   });
 });
 
+test('does not te-form shift into a Chinese function word', () => {
+  const result = splitLyricLine('ただ 眩しくて 只是 过于耀眼');
+  assert.deepEqual(result, {
+    jp: 'ただ 眩しくて',
+    zh: '只是 过于耀眼',
+    reason: 'standard',
+  });
+  assert.equal(splitLyricLine('今 会えた空は 息が届く距離で 此刻 相遇的天际').jp, '今 会えた空は 息が届く距離で');
+  assert.equal(splitLyricLine('恨んで泣いて消えたって 怨恨着 哭泣着').jp, '恨んで泣いて消えたって');
+});
+
 test('never splits credit lines', () => {
   assert.equal(splitLyricLine('作词 : Shihori'), null);
   assert.equal(splitLyricLine('Drums : 玉田豊夢'), null);

@@ -53,6 +53,14 @@ test('analyzeLyricsText returns the per-line split decision', () => {
   );
 });
 
+test('analyzeLyricsText does not te-form shift into a Chinese function word', () => {
+  const analysis = analyzeLyricsText('[02:34.88]ただ 眩しくて 只是 过于耀眼');
+  assert.equal(analysis.changed, 1);
+  assert.equal(analysis.decisions[0].jp, 'ただ 眩しくて');
+  assert.equal(analysis.decisions[0].zh, '只是 过于耀眼');
+  assert.equal(analysis.text, '[02:34.88]ただ 眩しくて\n[02:34.88]只是 过于耀眼');
+});
+
 test('analyzeLyricsText does not jump past a thin-space boundary into a Chinese translation', () => {
   const analysis = analyzeLyricsText('[01:50.34]“ありがとう”今はもう 元気は100％で\u2009以现在已经元气100%的状态 「谢谢你！」');
   assert.equal(analysis.changed, 1);

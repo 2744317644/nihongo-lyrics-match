@@ -307,7 +307,8 @@ function splitLyricLineInner(text) {
       index >= 0 &&
       index + 1 < strict.length &&
       firstToken.length <= 3 &&
-      !hasChineseMarker(firstToken)
+      !hasChineseMarker(firstToken) &&
+      !looksLikeChineseShiftToken(firstToken)
     ) {
       pick = strict[index + 1];
       reason = 'te-form-shift';
@@ -326,6 +327,25 @@ function splitLyricLineInner(text) {
   }
 
   return { jp: pick.pre, zh: pick.suf, reason };
+}
+
+const CN_TE_SHIFT_WORDS = new Set([
+  '只是', '此刻', '我们', '你们', '他们', '她们', '它们', '自己', '已经', '还是',
+  '就是', '不过', '但是', '因为', '所以', '如果', '即使', '虽然', '然后', '而且',
+  '并且', '或者', '还有', '没有', '不能', '不要', '不会', '可以', '应该', '必须',
+  '一直', '一起', '终于', '突然', '忽然', '依然', '仍然', '当然', '其实', '真的',
+  '非常', '十分', '更加', '不断', '继续', '开始', '直到', '为了', '关于', '对于',
+  '由于', '以及', '之后', '之前', '之中', '之外', '这样', '那样', '怎样', '这个',
+  '那个', '这里', '那里', '哪里', '这些', '那些', '所有', '任何', '每个', '整个',
+  '全部',
+]);
+
+function looksLikeChineseShiftToken(token) {
+  if (CN_TE_SHIFT_WORDS.has(token)) return true;
+  if (/^(?:只|此|从|让|给|对|为|于|该)/u.test(token)) return true;
+  if (token.length >= 3 && /^向/u.test(token)) return true;
+  if (token.length >= 3 && /着$/u.test(token)) return true;
+  return false;
 }
 
 /**
