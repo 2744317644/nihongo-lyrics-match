@@ -53,6 +53,18 @@ test('analyzeLyricsText returns the per-line split decision', () => {
   );
 });
 
+test('analyzeLyricsText strips a slash-delimited Chinese translation', () => {
+  const analysis = analyzeLyricsText('[00:16.00]楽しみだけれど ちょっと怖いけれど /一份期待夹杂着些许恐惧');
+  assert.equal(analysis.changed, 1);
+  assert.equal(analysis.decisions[0].reason, 'standard');
+  assert.equal(analysis.decisions[0].jp, '楽しみだけれど ちょっと怖いけれど');
+  assert.equal(analysis.decisions[0].zh, '一份期待夹杂着些许恐惧');
+  assert.equal(
+    analysis.text,
+    '[00:16.00]楽しみだけれど ちょっと怖いけれど\n[00:16.00]一份期待夹杂着些许恐惧',
+  );
+});
+
 test('analyzeLyricsText splits a lenticular-bracket translation before the opener', () => {
   const analysis = analyzeLyricsText(
     '[00:01.00]見たでしよ？ イタズラで聞く 赤くなった 〖看到了吗？ 恶作剧地问著 你却红了脸〗',
