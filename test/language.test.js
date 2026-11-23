@@ -109,6 +109,33 @@ test('does not te-form shift into a Chinese function word', () => {
   assert.equal(splitLyricLine('恨んで泣いて消えたって 怨恨着 哭泣着').jp, '恨んで泣いて消えたって');
 });
 
+test('splits an English lyric from its Chinese translation', () => {
+  assert.deepEqual(splitLyricLine('I wanna sleep in your feel 只想沉眠于你的思绪间'), {
+    jp: 'I wanna sleep in your feel',
+    zh: '只想沉眠于你的思绪间',
+    reason: 'standard',
+  });
+  assert.deepEqual(splitLyricLine('"We\'re the world" “我们代表了世界”'), {
+    jp: '"We\'re the world"',
+    zh: '“我们代表了世界”',
+    reason: 'standard',
+  });
+  assert.deepEqual(splitLyricLine('Raining\u3000夏日的午后'), {
+    jp: 'Raining',
+    zh: '夏日的午后',
+    reason: 'standard',
+  });
+});
+
+test('does not treat metadata or mixed chants as English translations', () => {
+  assert.equal(splitLyricLine('作词 : Aimer'), null);
+  assert.equal(splitLyricLine('也会跨越那条分界线（Fuh uh uh la la la）'), null);
+  assert.equal(splitLyricLine('jack-jackie, 邪鬼 zap, zap, jack-jackie'), null);
+  assert.equal(splitLyricLine('Calling Happy'), null);
+  assert.equal(splitLyricLine('na 生动鲜活 艳紫妖红的 疯狂日常'), null);
+  assert.equal(splitLyricLine('Juicy juicy moment 段々 juicy juicy oh yeah 这是妙趣横生的时刻'), null);
+});
+
 test('never splits credit lines', () => {
   assert.equal(splitLyricLine('作词 : Shihori'), null);
   assert.equal(splitLyricLine('Drums : 玉田豊夢'), null);

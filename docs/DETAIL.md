@@ -2,9 +2,10 @@
 
 ## What it does
 
-Many Japanese songs carry a Chinese translation inside the same timed lyric line: `[00:28.70]春空に残る淋しさ そっと心を濡らした 春雨后留下的空寂轻轻沾湿心田`. The tools split such lines into two lines with identical timestamps, then review the result against the untouched original saved as an LRC backup.
+Many Japanese or English songs carry a Chinese translation inside the same timed lyric line: `[00:28.70]春空に残る淋しさ そっと心を濡らした 春雨后留下的空寂轻轻沾湿心田`. The tools split such lines into two lines with identical timestamps, then review the result against the untouched original saved as an LRC backup.
 
 - **HTML report:** an apply generates a self-contained interactive report (pass `report: false` to skip it). It starts with the total and the disjoint conversion categories (converted / not converted), with no-change, no-lyrics, pending, skipped and error files visible under the not-converted tab, then calls out the content anomalies that need review (a subset, not added again). Not-converted files keep a readable line count and a raw timed-line preview; **0 pairs means no Japanese/Chinese split pair, not no lyrics**. Clicking a song shows its flagged lines with timestamps, both lyric halves, the original line, split reasons, and flags. Use `lyrics_report` to regenerate it or choose another output. It needs no server or network and is read-only.
+- **English lyrics:** `I wanna sleep in your feel 只想沉眠于你的思绪间` is split into the English original and its Chinese translation; metadata such as `作词 : Aimer`, pure English, and mixed chants are not split.
 - **No settings page:** the plugin deliberately has no Settings UI. Use the four tools and the generated HTML report; `lyrics_revert` handles restore.
 - **Bracket-quoted translations:** a trailing translation wrapped in `〖...〗` (and the other supported paired openers) stays on the Chinese side even when it contains spaces, so `〖看到了吗？ 恶作剧地问著 你却红了脸〗` is split before the opening bracket.
 - **Slash delimiters:** a translation introduced by a leading `/` in the merged line (for example `…けれど /一份期待…`) is split and the delimiter slash is removed. The slash is only removed when it starts the Chinese half, the remainder has Han but no kana and no further slash; `A/B`, URLs, `好き/嫌い`, and `他/她` are left untouched.
@@ -44,7 +45,7 @@ Each flagged pair, or file, carries zero or more of these flags. `noBackup` and 
 
 | Flag | Meaning |
 | --- | --- |
-| `jpHasChineseOnly` | The Japanese half contains a Simplified-Chinese-only character (for example 泪 used for 涙). |
+| `jpHasChineseOnly` | The source half contains a Simplified-Chinese-only character (for example 泪 used for 涙). |
 | `zhHasJapaneseOnly` | The Chinese half contains a Japanese-only form (for example 変 used for 变). |
 | `shortTranslation` | The Chinese half has at most 3 non-space characters and no Simplified-Chinese-only character; very short translations often mean the boundary stopped early. |
 | `missingPair` | One half of the pair is missing at its timestamp in the current file. |

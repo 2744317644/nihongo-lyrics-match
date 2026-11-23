@@ -53,6 +53,22 @@ test('analyzeLyricsText returns the per-line split decision', () => {
   );
 });
 
+test('analyzeLyricsText splits an English lyric from its Chinese translation', () => {
+  const analysis = analyzeLyricsText('[01:00.90]I wanna sleep in your feel 只想沉眠于你的思绪间');
+  assert.equal(analysis.changed, 1);
+  assert.equal(analysis.decisions[0].jp, 'I wanna sleep in your feel');
+  assert.equal(analysis.decisions[0].zh, '只想沉眠于你的思绪间');
+  assert.equal(
+    analysis.text,
+    '[01:00.90]I wanna sleep in your feel\n[01:00.90]只想沉眠于你的思绪间',
+  );
+});
+
+test('analyzeLyricsText does not split English metadata or mixed chants', () => {
+  assert.equal(analyzeLyricsText('[00:00.00]作词 : Aimer').changed, 0);
+  assert.equal(analyzeLyricsText('[00:00.00]jack-jackie, 邪鬼 zap, zap, jack-jackie').changed, 0);
+});
+
 test('analyzeLyricsText does not te-form shift into a Chinese function word', () => {
   const analysis = analyzeLyricsText('[02:34.88]ただ 眩しくて 只是 过于耀眼');
   assert.equal(analysis.changed, 1);
